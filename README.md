@@ -14,7 +14,7 @@ To run CollabSphere locally on your machine, follow these steps:
    ```
    Activate the virtual environment (on IOS)
    ```
-   source venv/bin/activate (for IOS)
+   source venv/bin/activate
    ```
 
 4. Install the project dependencies using pip:
