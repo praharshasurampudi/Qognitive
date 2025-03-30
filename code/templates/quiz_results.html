@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+<h1 class="dashboard-title"  style="display: flex; justify-content: space-between; align-items: center;">
+    Quiz Results
+    <form method="GET" action="{{ url_for('quiz_results') }}" style="display: flex; gap: 10px;">
+        <input type="text" name="search" placeholder="Search by quiz, chapter, or subject..." 
+               style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 300px; font-size: 16px;" 
+               value="{{ search_query }}">
+               <button type="submit" style="padding: 8px 12px; border-radius: 8px; border: 2px solid transparent; background-color: #000; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;" 
+               onmouseover="this.style.backgroundColor='#fff'; this.style.color='#000'; this.style.border='2px solid #000';" 
+               onmouseout="this.style.backgroundColor='#000'; this.style.color='#fff'; this.style.border='2px solid transparent';">
+                   Search
+               </button>
+               
+    </form>
+</h1>
+
+<style>
+    .quiz-card-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .quiz-result-section {
+        background: #f1f1f1;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .quiz-header {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .quiz-results-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .quiz-result-card {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        padding: 15px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .quiz-result-card:hover {
+        transform: translateY(-3px);
+    }
+
+    .quiz-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .quiz-detail-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .quiz-detail-key {
+        font-weight: bold;
+        color: #555;
+    }
+
+    .reattempt-btn {
+        display: inline-block;
+        background-color: #000000;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        margin-top: 10px;
+        border: 2px solid transparent;
+        transition: background 0.3s ease-in-out, border 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+    .reattempt-btn:hover {
+        background-color: #ffffff;
+        color: #000;
+        border: 2px solid #000;
+    }
+
+
+    @media (max-width: 768px) {
+        .quiz-results-grid {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+</style>
+
+{% if scores %}
+    {% set grouped_scores = {} %}
+    {% for score in scores | sort(attribute="timeStamp", reverse=True) %}
+        {% set chapter_id = quizzes[score.quiz_id].chapter.id %}
+        {% if chapter_id not in grouped_scores %}
+            {% set _ = grouped_scores.update({chapter_id: []}) %}
+        {% endif %}
+        {% set _ = grouped_scores[chapter_id].append(score) %}
+    {% endfor %}
+
+    <div class="quiz-card-container">
+        {% for chapter_id, attempts in grouped_scores.items() %}
+            {% set chapter = quizzes[attempts[0].quiz_id].chapter %}
+            {% set subject = chapter.subject %}
+
+            <div class="quiz-result-section">
+                <div class="quiz-header">Chapter: {{ chapter.name }} ({{ subject.name }})</div>
+
+                <div class="quiz-results-grid">
+                    {% for score in attempts %}
+                        {% set quiz = quizzes[score.quiz_id] %}
+                        <div class="quiz-result-card">
+                            <div class="quiz-card-body">
+
+                                <div class="quiz-detail-item">
+                                    <span class="quiz-detail-key">Quiz:</span>
+                                    <span class="quiz-detail-value">{{ quiz.name }}</span>
+                                </div>
+
+                                <div class="quiz-detail-item">
+                                    <span class="quiz-detail-key">Chapter:</span>
+                                    <span class="quiz-detail-value">{{ chapter.name }}</span>
+                                </div>
+
+                                <div class="quiz-detail-item">
+                                    <span class="quiz-detail-key">Subject:</span>
+                                    <span class="quiz-detail-value">{{ subject.name }}</span>
+                                </div>
+
+                                <div class="quiz-detail-item">
+                                    <span class="quiz-detail-key">Attempted On:</span>
+                                    <span class="quiz-detail-value">{{ score.timeStamp.strftime('%d-%m-%Y') }}</span>
+                                </div>
+                                
+                                <div class="quiz-detail-item">
+                                    <span class="quiz-detail-key">Time:</span>
+                                    <span class="quiz-detail-value">{{ score.timeStamp.strftime('%I:%M %p') }}</span>
+                                </div>
+                                
+                                
+
+                                <div class="quiz-detail-item">
+                                    <span class="quiz-detail-key">Your Score:</span>
+                                    <span class="quiz-detail-value">{{ score.total_scored }} / {{ quiz.questions|length }}</span>
+                                </div>
+
+                                <a href="{{ url_for('attempt_quiz', quiz_id=quiz.id) }}" class="reattempt-btn">Reattempt Quiz</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No quizzes attempted yet.</p>
+{% endif %}
+
+{% endblock %}

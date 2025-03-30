@@ -1,0 +1,92 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block crud %}
+<h2 class="dashboard-title">Qognitive Summary</h2>
+
+<div class="summary-container">
+    <div class="summary-card">
+        <h4>Total Subjects</h4>
+        <p>{{ subjects_count }}</p>
+    </div>
+    <div class="summary-card">
+        <h4>Total Chapters</h4>
+        <p>{{ chapters_count }}</p>
+    </div>
+    <div class="summary-card">
+        <h4>Total Quizzes</h4>
+        <p>{{ quizzes_count }}</p>
+    </div>
+    <div class="summary-card">
+        <h4>Total Questions</h4>
+        <p>{{ questions_count }}</p>
+    </div>
+</div>
+
+<h2 class="dashboard-title">User Summary</h2>
+<div class="user-summary-container">
+    {% for user in users %}
+    <div class="summary-card">
+        <h4>{{ user.name }}</h4>
+        <h5><strong>Email:</strong> {{ user.email }}</h5>
+        <h5><strong>Qualification:</strong> {{ user.qualification if user.qualification else 'ADMIN' }}</h5>
+        <h5><strong>Date of Birth:</strong> 
+            {% if user.dob %}
+                {{ user.dob.strftime('%d %b, %Y') }}
+            {% endif %}
+        </h5>
+    </div>
+    {% endfor %}
+</div>
+
+
+<style>
+.summary-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 2 cards per row */
+    gap: 20px;
+    justify-content: center;
+    place-items: center;
+    margin-top: 20px;
+}
+
+.user-summary-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.summary-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(100, 0, 255, 0.1);
+    text-align: center;
+    width: 200px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.summary-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(100, 0, 255, 0.4); 
+}
+
+.summary-card h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.summary-card p {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(100,0,255);
+}
+
+.summary-card h5 {
+    color: rgb(100,0,255);
+}
+
+</style>
+
+{% endblock %}

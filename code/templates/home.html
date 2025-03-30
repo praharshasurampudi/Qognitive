@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Welcome to Qognitive</h1>
+
+<div class="card-container">
+    <!-- Admin Login Card -->
+    <div class="card">
+        <h2>Admin Login</h2>
+        <p>Manage users and access the admin panel.</p>
+        <a href="{{ url_for('admin_login') }}" class="btn">Login as Admin</a>
+    </div>
+
+    <!-- Student Login Card -->
+    <div class="card">
+        <h2>Student Login</h2>
+        <p>Access your dashboard and learning resources.</p>
+        <a href="{{ url_for('login') }}" class="btn">Login as Student</a>
+    </div>
+</div>
+{% endblock %}

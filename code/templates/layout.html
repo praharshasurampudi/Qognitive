@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block head %}
+    <title>{% block title %} {% endblock %} - Qognitive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='layout_style.css') }}">
+    {% endblock %}
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo" onclick="location.href='/'" style="cursor: pointer;">Qognitive</div>
+    <ul class="nav-links">
+        {% if request.endpoint in ['register', 'login', 'admin_login','home'] %}
+            <!-- Only Show Admin & Student Login on Register Page -->
+            <li><a href="{{ url_for('admin_login') }}" class="{% if request.endpoint == 'admin_login' %}active{% endif %}">Admin Login</a></li>
+            <li><a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Student Login</a></li>
+        {% elif current_user.is_authenticated %}
+            {% if request.path.startswith('/admin') %}
+                <!-- Show Admin Dashboard links for all admin pages -->
+                <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Admin Dashboard</a></li>
+                <li><a href="{{ url_for('admin_summary') }}" class="{% if request.endpoint == 'admin_summary' %}active{% endif %}">Summary</a></li>
+                <li><a href="{{ url_for('home') }}" class="logout-btn">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+                {% if scores %}
+                    <li><a href="{{ url_for('quiz_results', quiz_id=scores[0].quiz_id) }}" class="{% if request.endpoint == 'quiz_results' %}active{% endif %}">Scores</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('home') }}" class="logout-btn">Logout</a></li>
+            {% endif %}
+        {% else %}
+            <li><a href="{{ url_for('admin_login') }}" class="{% if request.endpoint == 'admin_login' %}active{% endif %}">Admin Login</a></li>
+            <li><a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Student Login</a></li>
+        {% endif %}
+    </ul>
+</div>
+
+
+
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flashes">
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <div class="{% if request.path.startswith('/admin/') %}acontent-container{% else %}content-container{% endif %}">
+        {% block content %} {% endblock %}
+    </div>
+
+</body>
+</html>

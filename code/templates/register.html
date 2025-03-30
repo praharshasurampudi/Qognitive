@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Registration</h1>
+
+<div class="form-container">
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="input-field") }}
+            {% if form.email.errors %}
+                <small class="error-message">{{ form.email.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="input-field") }}
+            {% if form.password.errors %}
+                <small class="error-message">{{ form.password.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.confirm_password.label }}
+            {{ form.confirm_password(class="input-field") }}
+            {% if form.confirm_password.errors %}
+                <small class="error-message">{{ form.confirm_password.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.fullName.label }}
+            {{ form.fullName(class="input-field") }}
+            {% if form.fullName.errors %}
+                <small class="error-message">{{ form.fullName.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.qualification.label }}
+            {{ form.qualification(class="input-field") }}
+            {% if form.qualification.errors %}
+                <small class="error-message">{{ form.qualification.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.dob.label }}
+            {{ form.dob(class="input-field") }}
+            {% if form.dob.errors %}
+                <small class="error-message">{{ form.dob.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="d-grid gap-2">
+            <button class="btn submit-btn mt-4" type="submit">Register</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+
+<div class="adashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Space</h2>
+        <ul>
+            <li><a href="{{ url_for('manage_subjects') }}" class="{% if request.endpoint == 'manage_subjects' %}active{% endif %}">Manage Subjects</a></li>
+            <li><a href="{{ url_for('manage_chapters') }}" class="{% if request.endpoint == 'manage_chapters' %}active{% endif %}">Manage Chapters</a></li>
+            <li><a href="{{ url_for('manage_quizzes') }}" class="{% if request.endpoint == 'manage_quizzes' %}active{% endif %}">Manage Quizzes</a></li>
+<!--             
+            {% for quiz in quizzes %}
+            <li><a href="{{ url_for('manage_quiz_questions', quiz_id=quiz.id) }}" class="{% if request.endpoint == 'manage_quiz_questions' and request.view_args.get('quiz_id') == quiz.id %}active{% endif %}">
+                    Manage Questions ({{ quiz.name }})</a></li>
+            {% endfor %}
+             -->
+            <li><a href="{{ url_for('manage_users') }}" class="{% if request.endpoint == 'manage_users' %}active{% endif %}">Manage Users</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        {% block crud %}
+        <h2 class="dashboard-title">Admin Qognitive Dashboard</h2>
+        <br>
+        <br>
+        <br>
+        <div class="content-container" style="font-size: 18px;">
+            <p class="dashboard-subtitle" style="text-align: justify;">
+                <strong>Qognitive</strong> is a Quiz Master Project that provides a platform for multiple students to effectively study for numerous courses. 
+                The platform supports two distinct user roles: <strong>Administrator</strong> and <strong>Students</strong>, ensuring an organized learning system.
+            </p>
+            <p class="dashboard-subtitle" style="text-align: justify;">
+                The <strong>Administrator</strong> of <strong>Qognitive</strong> is responsible for managing the platform, ensuring a well-organized and efficient learning environment. 
+                They oversee the creation and organization of <strong>subjects, chapters, and quizzes</strong>, providing students with structured study materials.
+            </p>
+            <p style="text-align: justify;">
+                Administrators have the ability to create and customize quizzes, set time limits, and monitor student progress. 
+                Additionally, they regulate user activity to maintain smooth interactions and uphold the integrity of the learning process. 
+                The platform is built using <strong>Flask</strong> for a lightweight yet powerful back-end, 
+                <strong>Jinja2 templating with HTML and CSS</strong> for a responsive front-end, and 
+                <strong>SQLite</strong> as the exclusive database for efficient data management. 
+                Through these tools, administrators help ensure that <strong>Qognitive</strong> remains an intuitive and interactive platform, 
+                making exam preparation structured, engaging, and accessible.
+            </p>
+        </div>
+        
+        {% endblock %}
+    </div>
+</div>
+
+{% endblock %}

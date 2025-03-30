@@ -1,0 +1,43 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block title %} Manage Questions{% endblock %}
+
+{% block crud %}
+<h1 class="dashboard-title">Manage Questions for {{ quiz.name }}</h1>
+
+<!-- Search Form and Add Question Button -->
+<div class="subject-header">
+    <a href="{{ url_for('add_question', quiz_id=quiz.id) }}" class="btn abtn-success">+ Add Quiz Question</a>
+    <form method="GET" action="{{ url_for('manage_quiz_questions', quiz_id=quiz.id) }}" class="search-form">
+        <input type="text" name="query" placeholder="Search Question..." value="{{ request.args.get('query', '') }}">
+        <button type="submit" class="btn btn-success">Search</button>
+    </form>
+</div>
+
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Statement</th>
+            <th>Correct Option</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for question in questions %}
+        <tr>
+            <td>{{ question.id }}</td>
+            <td>{{ question.title }}</td>
+            <td>{{ question.question_statement }}</td>
+            <td>{{ question.correct_option }}</td>
+            <td class="action-buttons">
+                <a href="{{ url_for('edit_question', id=question.id) }}" class="btn abtn-primary">Edit</a>
+                <a href="{{ url_for('delete_question', id=question.id) }}" class="btn abtn-danger"
+                   onclick="return confirm('Are you sure you want to delete this question?');">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

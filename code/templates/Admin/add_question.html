@@ -1,0 +1,111 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block title %}Add Question{% endblock %}
+{% block crud %}
+
+<div class="content-container">
+    <h2 class="dashboard-title">Add Question for Quiz: {{ quiz_name }}</h2>
+
+    <div class="form-container">
+        <form method="post">
+            {{ form.hidden_tag() }}
+
+            <!-- Question Title -->
+            <div class="form-group">
+                {{ form.title.label }}
+                {{ form.title(class="form-control") }}
+                {% if form.title.errors %}
+                <small>
+                    {% for error in form.title.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Question Statement -->
+            <div class="form-group">
+                {{ form.question_statement.label }}
+                {{ form.question_statement(class="form-control") }}
+                {% if form.question_statement.errors %}
+                <small>
+                    {% for error in form.question_statement.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Option 1 -->
+            <div class="form-group">
+                {{ form.option1.label }}
+                {{ form.option1(class="form-control") }}
+                {% if form.option1.errors %}
+                <small>
+                    {% for error in form.option1.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Option 2 -->
+            <div class="form-group">
+                {{ form.option2.label }}
+                {{ form.option2(class="form-control") }}
+                {% if form.option2.errors %}
+                <small>
+                    {% for error in form.option2.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Option 3 -->
+            <div class="form-group">
+                {{ form.option3.label }}
+                {{ form.option3(class="form-control") }}
+                {% if form.option3.errors %}
+                <small>
+                    {% for error in form.option3.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Option 4 -->
+            <div class="form-group">
+                {{ form.option4.label }}
+                {{ form.option4(class="form-control") }}
+                {% if form.option4.errors %}
+                <small>
+                    {% for error in form.option4.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Correct Option -->
+            <div class="form-group">
+                {{ form.correct_option.label }}
+                {{ form.correct_option(class="form-control") }}
+                {% if form.correct_option.errors %}
+                <small>
+                    {% for error in form.correct_option.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                {{ form.submit(class="submit-btn") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

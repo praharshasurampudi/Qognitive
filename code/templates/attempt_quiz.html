@@ -1,0 +1,201 @@
+{% extends "layout.html" %}
+{% block title %}Attempt Quiz: {{ quiz.name }}{% endblock %}
+{% block content %}
+
+<style>
+    /* Center the quiz container */
+    .quiz-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #ffffff;
+        box-shadow: 0px 4px 10px rgb(100, 0, 255);
+        border-radius: 10px;
+    }
+
+    /* Timer styling */
+    .quiz-timer {
+        display: block;
+        font-size: 20px;
+        color: #ff4d4d;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    /* Question card styling */
+    .quiz-question {
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+    }
+
+    .question-statement {
+        font-size: 18px;
+        font-weight: 500;
+        color: #000000;
+    }
+
+    /* Custom option styling */
+    .quiz-options {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Two columns */
+        gap: 10px;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Less spacing between radio button and text */
+        padding: 10px;
+        background: #fff;
+        border-radius: 5px;
+        border: 2px solid #ccc;
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    .radio-option input[type="radio"] {
+        appearance: none;
+        width: 0.2cm;  /* Tiny size */
+        height: 0.2cm; /* Tiny size */
+        border: 1px solid #666;
+        border-radius: 25%;
+        outline: none;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .radio-option input[type="radio"]:checked {
+        background-color: rgba(0, 0, 0, 0.745);
+        border: 1px solid white;
+        box-shadow: 1px 1px 1px rgb(100, 0, 255);
+    }
+
+    .radio-option.selected {
+        background: #e8f0ff;
+        border-color: #000000;
+    }
+
+    .radio-option:hover {
+        background: #f0f0f0;
+        border-color: #000;
+    }
+
+    /* Hide default radio buttons */
+    .hidden-radio {
+        display: none;
+    }
+
+    /* Submit button styling */
+    .submit-btn {
+        display: block;
+        width: 100%;
+        background: #000000;
+        color: white;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+        background: #ffffff;
+        color: #000;
+    }
+</style>
+
+<div class="quiz-container">
+    <h1 class="dashboard-title" style="text-align: center;">{{ quiz.name }}</h1>
+
+    {% if quiz.time_duration > 0 %}
+        <span id="timer" class="quiz-timer" style="text-align: center;">Timer: 00:00</span>
+    {% endif %}
+
+    <form id="quizForm" class="quiz-form" method="POST">
+        {% for question in questions %}
+        <div class="quiz-question">
+            <div class="question-number">Question #{{ loop.index }}</div>
+            <div class="question-statement">{{ question.title }}</div>
+            <div class="question-statement">{{ question.question_statement }}</div>
+            <div class="quiz-options">
+                {% for option, label in [
+                    (question.option1, "Option 1"),
+                    (question.option2, "Option 2"),
+                    (question.option3, "Option 3"),
+                    (question.option4, "Option 4")
+                ] %}
+                <label class="radio-option" data-question="{{ question.id }}" data-value="{{ loop.index }}">
+                    <input type="radio" class="hidden-radio" name="question_{{ question.id }}" value="{{ loop.index }}" required>
+                    <span class="radio-custom"></span>
+                    <strong>{{ label }} :</strong> {{ option }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <button class="submit-btn" type="submit">Submit Quiz</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const quizId = {{ quiz.id }};
+        const duration = {{ quiz.time_duration }} * 60; 
+        const timerEl = document.getElementById("timer");
+        const quizForm = document.getElementById("quizForm");
+        const storageKey = `quiz_timer_${quizId}`;
+        const params = new URLSearchParams(window.location.search);
+        
+        let { startTime, elapsedTime = 0 } = JSON.parse(localStorage.getItem(storageKey)) || {};
+        let now = Math.floor(Date.now() / 1000);
+
+        if (params.has("reattempt") || !startTime || now - startTime + elapsedTime >= duration) {
+            startTime = now;
+            elapsedTime = 0;
+            localStorage.setItem(storageKey, JSON.stringify({ startTime, elapsedTime }));
+        }
+
+        const formatTime = (seconds) => {
+            let h = Math.floor(seconds / 3600);
+            let m = Math.floor((seconds % 3600) / 60);
+            let s = seconds % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        };
+
+        const updateTimer = () => {
+            let remaining = duration - (Math.floor(Date.now() / 1000) - startTime + elapsedTime);
+            if (remaining <= 0) {
+                clearInterval(timer);
+                localStorage.removeItem(storageKey);
+                alert("Time's up! Submitting your quiz...");
+                quizForm.submit();
+            } else {
+                timerEl.textContent = formatTime(remaining);
+            }
+        };
+
+        let timer = setInterval(updateTimer, 1000);
+        updateTimer();
+
+        window.addEventListener("beforeunload", () => {
+            localStorage.setItem(storageKey, JSON.stringify({ startTime, elapsedTime: Math.floor(Date.now() / 1000) - startTime }));
+        });
+
+        quizForm.addEventListener("submit", () => localStorage.removeItem(storageKey));
+    });
+</script>
+
+
+
+
+
+{% endblock %}

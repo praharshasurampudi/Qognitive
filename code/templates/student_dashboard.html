@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="dashboard-title">Student Dashboard</h1>
+
+<div class="dashboard-container">
+    <form method="GET" action="{{ url_for('dashboard') }}">
+        <input type="text" name="search" placeholder="Search by Quiz, Chapter, or Subject..." value="{{ search_query or '' }}" class="search-bar">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+    <h5 class="quiz-heading">You can Attempt any Quiz based on your interest from the list:</h5>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Quiz Name</th>
+                <th>Chapter</th>
+                <th>Subject</th>
+                <th>Date of Quiz</th>
+                <th>Duration</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quiz in quizzes %}
+            <tr>
+                <td>{{ quiz.name }}</td>
+                <td>{{ quiz.chapter.name }}</td>
+                <td>{{ quiz.chapter.subject.name }}</td>
+                <td>{{ quiz.date_of_quiz.strftime('%d %b, %Y %I:%M %p') }}</td>
+                <td>{{ quiz.time_duration }} Minutes</td>
+                <td>
+                    {% set user_score = scores|selectattr("quiz_id", "equalto", quiz.id)|list %}
+                    {% if user_score %}
+                        <a href="{{ url_for('attempt_quiz', quiz_id=quiz.id) }}" class="btn-attempt">Reattempt</a>
+                    {% else %}
+                        <a href="{{ url_for('attempt_quiz', quiz_id=quiz.id) }}" class="btn-attempt">Attempt</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>  
+</div>
+
+<style>
+    .search-bar {
+        width: 90%;
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        outline: none;
+        transition: border 0.3s ease-in-out;
+    }
+
+    .search-bar:focus {
+        border: 2px solid #000;
+    }
+
+    .search-btn {
+        padding: 10px 14px;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-color: #000;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out, border 0.3s ease-in-out;
+    }
+
+    .search-btn:hover {
+        background-color: #ffffff;
+        color: #000;
+        border: 2px solid #000;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block title %}Edit Quiz{% endblock %}
+{% block crud %}
+
+<div class="content-container">
+    <h2 class="page-title">Edit Quiz</h2>
+
+    <div class="form-container">
+        <form method="post">
+            {{ form.hidden_tag() }}
+
+            <!-- Name Input -->
+            <div class="form-group">
+                {{ form.name.label }}
+                {{ form.name(class="form-control") }}
+                {% if form.name.errors %}
+                <small>
+                    {% for error in form.name.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Date of Quiz -->
+            <div class="form-group">
+                {{ form.date_of_quiz.label }}
+                {{ form.date_of_quiz(class="form-control") }}
+                {% if form.date_of_quiz.errors %}
+                <small>
+                    {% for error in form.date_of_quiz.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Time Duration -->
+            <div class="form-group">
+                <label for="{{ form.time_duration.id }}">{{ form.time_duration.label.text }} (in Mins)</label>
+                {{ form.time_duration(class="form-control") }}
+                {% if form.time_duration.errors %}
+                <small>
+                    {% for error in form.time_duration.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Chapter Selection -->
+            <div class="form-group">
+                {{ form.chapter_id.label }}
+                {{ form.chapter_id(class="form-control") }}
+                {% if form.chapter_id.errors %}
+                <small>
+                    {% for error in form.chapter_id.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group">
+                {{ form.submit(class="submit-btn") }}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

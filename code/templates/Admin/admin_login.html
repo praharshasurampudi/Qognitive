@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}Admin Login{% endblock %}
+{% block content %}
+<div style="margin-bottom: 40px;"><br></div>
+<h1 class="page-title">Admin Login</h1>
+
+<div class="form-container">
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(class="form-control", style="padding: 12px 15px;") }}
+            {% if form.email.errors %}
+                <small>{{ form.email.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.password.label }}
+            {{ form.password(class="form-control", style="padding: 12px 15px;") }}
+            {% if form.password.errors %}
+                <small>{{ form.password.errors[0] }}</small>
+            {% endif %}
+        </div>
+
+        <br>
+        <div class="d-grid gap-2">
+            <button class="btn submit-btn mt-4" type="submit">Login</button>
+        </div>    
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="register-link">
+        <p>Not an Admin? <a href="{{ url_for('login') }}">Login as Student</a></p>
+    </div>
+</div>
+<div style="margin-bottom: 40px;"><br></div>
+
+
+{% endblock %}

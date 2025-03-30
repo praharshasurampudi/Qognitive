@@ -1,0 +1,56 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block title %}Edit Chapter{% endblock %}
+{% block crud %}
+<div class="content-container">
+    <h2 class="page-title">Edit Chapter</h2>
+    <div class="form-container">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            
+            <!-- Name Input -->
+            <div class="form-group">
+                {{ form.name.label }}
+                {{ form.name(class="form-control") }}
+                {% if form.name.errors %}
+                <small>
+                    {% for error in form.name.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+            
+            <!-- Description Input -->
+            <div class="form-group">
+                {{ form.description.label }}
+                {{ form.description(class="form-control description-box") }}
+                {% if form.description.errors %}
+                <small>
+                    {% for error in form.description.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+            
+            <!-- Subject Selection -->
+            <div class="form-group">
+                {{ form.subject_id.label }}
+                {{ form.subject_id(class="form-control") }}
+                {% if form.subject_id.errors %}
+                <small>
+                    {% for error in form.subject_id.errors %}
+                    {{ error }}<br>
+                    {% endfor %}
+                </small>
+                {% endif %}
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                {{ form.submit(class="submit-btn") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
