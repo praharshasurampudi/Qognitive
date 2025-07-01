@@ -195,10 +195,12 @@ def admin_logout():
 @app.route("/admin/dashboard")
 @login_required
 def admin_dashboard():
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
-         flash("You do not have permission to access this page", category = "error")
-         return redirect(url_for('base_login'))
+  
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
+        flash("You do not have permission to access this page", category="error")
+        return redirect(url_for('admin_login'))
     return render_template("admin/admin_dashboard.html")
+
 
 @app.route('/admin/summary')
 def admin_summary():
@@ -221,7 +223,7 @@ def admin_summary():
 
 @app.route("/admin/manage_subjects")
 def manage_subjects():
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You do not have permission to access this page", category="error")
         return redirect(url_for('home'))
     
@@ -238,7 +240,7 @@ def manage_subjects():
 @app.route("/admin/add_subject", methods=['GET', 'POST'])
 @login_required
 def add_subject():
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     form = SubjectForm()
@@ -254,7 +256,7 @@ def add_subject():
 @app.route("/admin/edit_subject/<int:id>", methods=['GET', 'POST'])
 @login_required
 def edit_subject(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     subject = Subject.query.get_or_404(id)
@@ -271,7 +273,7 @@ def edit_subject(id):
 @app.route("/admin/delete_subject/<int:id>")
 @login_required
 def delete_subject(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     subject = Subject.query.get_or_404(id)
@@ -285,7 +287,7 @@ def delete_subject(id):
 
 @app.route("/admin/manage_chapters", methods=['GET', 'POST'])
 def manage_chapters():
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You do not have permission to access this page", category="error")
         return redirect(url_for('home'))
 
@@ -301,7 +303,7 @@ def manage_chapters():
 # Add Chapter
 @app.route("/admin/add_chapter.html", methods = ['GET', 'POST'])
 def add_chapter():
-     if current_user.name != os.getenv('ADMIN_USERNAME'):
+     if current_user.email != os.getenv('ADMIN_USERNAME'):
          flash("You do not have permission to access this page", category = "error")
          return redirect(url_for('home'))
      form = ChapterForm()
@@ -317,7 +319,7 @@ def add_chapter():
 # Edit Chapter
 @app.route("/admin/edit_chapter/<int:id>", methods=['GET', 'POST'])
 def edit_chapters(id):
-     if current_user.name != os.getenv('ADMIN_USERNAME'):
+     if current_user.email != os.getenv('ADMIN_USERNAME'):
          flash("You do not have permission to access this page", category = "error")
          return redirect(url_for('home'))
      chapter = Chapter.query.get_or_404(id)
@@ -335,7 +337,7 @@ def edit_chapters(id):
 @app.route("/admin/delete_chapter/<int:id>")
 @login_required
 def delete_chapter(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You do not have permission to access this page", category="error")
         return redirect(url_for('home'))
     
@@ -350,7 +352,7 @@ def delete_chapter(id):
 ###================================================= QUIZZES =======================================================
 @app.route("/admin/manage_quizzes", methods=['GET', 'POST'])
 def manage_quizzes():
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You do not have permission to access this page", category="error")
         return redirect(url_for('home'))
 
@@ -367,7 +369,7 @@ def manage_quizzes():
 @app.route("/admin/add_quiz", methods=['GET', 'POST'])
 @login_required
 def add_quiz():
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     form = QuizForm()
@@ -389,7 +391,7 @@ def add_quiz():
 @app.route("/admin/edit_quiz/<int:id>", methods=['GET', 'POST'])
 @login_required
 def edit_quiz(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     quiz = Quiz.query.get_or_404(id)
@@ -409,7 +411,7 @@ def edit_quiz(id):
 @app.route("/admin/delete_quiz/<int:id>", methods=['POST'])
 @login_required
 def delete_quiz(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     quiz = Quiz.query.get_or_404(id)
@@ -422,7 +424,7 @@ def delete_quiz(id):
 @app.route("/admin/manage_questions/<int:quiz_id>")
 @login_required
 def manage_quiz_questions(quiz_id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
 
@@ -445,7 +447,7 @@ def manage_quiz_questions(quiz_id):
 @login_required
 def add_question(quiz_id):
     quiz = Quiz.query.get(quiz_id)
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     form = QuestionForm()
@@ -470,7 +472,7 @@ def add_question(quiz_id):
 @app.route("/admin/edit_question/<int:id>", methods=['GET', 'POST'])
 @login_required
 def edit_question(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     
@@ -496,7 +498,7 @@ def edit_question(id):
 @app.route("/admin/delete_question/<int:id>")
 @login_required
 def delete_question(id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You don't have permission to access this page", category="error")
         return redirect(url_for("home"))
     
@@ -514,7 +516,7 @@ def delete_question(id):
 
 @app.route("/admin/manage_users")
 def manage_users():
-     if current_user.name != os.getenv('ADMIN_USERNAME'):
+     if current_user.email != os.getenv('ADMIN_USERNAME'):
          flash("You do not have permission to access this page", category = "error")
          return redirect(url_for('home'))
      users = User.query.all()
@@ -523,7 +525,7 @@ def manage_users():
 
 @app.route("/admin/flag_user/<int:user_id>", methods=['POST'])
 def flag_user(user_id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You do not have permission to perform this action", category="error")
         return redirect(url_for('manage_users'))
 
@@ -542,7 +544,7 @@ def flag_user(user_id):
 
 @app.route("/admin/delete_user/<int:user_id>", methods=['POST'])
 def delete_user(user_id):
-    if current_user.name != os.getenv('ADMIN_USERNAME'):
+    if current_user.email != os.getenv('ADMIN_USERNAME'):
         flash("You do not have permission to perform this action", category="error")
         return redirect(url_for('manage_users'))
 
